@@ -1,163 +1,203 @@
 # Mini-Milestone-Journey-Management-System
 This project is a full-stack web application that allows users to manage a journey consisting of stages and steps (tasks). Each step has a status, and completion percentages are calculated dynamically at the stage and journey levels.
 
-Absolutely 👍
-Below is a **proper, structured project documentation** you can directly use for:
 
-* College / capstone submission
-* GitHub `README.md`
-* Internship / portfolio explanation
-* Viva / review panel
+Instructions 
 
-I’ll include:
+```md
+# Mini Milestone Journey UI (React + FastAPI)
 
-* Architecture explanation
-* API documentation
-* Component documentation
-* Data flow
-* UML diagrams (**in text + Mermaid**, which you can render on GitHub / Markdown tools)
-
----
-
-# 📘 Project Documentation
-
-## Mini Milestone Journey Management System
+A full-stack mini project that visualizes a **Journey → Stages → Steps** workflow with:
+- Left sidebar: stages + mini progress bars + selection highlight
+- Right panel: stage details + steps list + status tags
+- Update step status via modal (PATCH)
+- Add/Delete **Stages** and **Steps**
+- Auto-calculated completion percentages
+- Loading animations for slow API responses
+- Error handling (API failures, empty stages)
 
 ---
 
-## 1. Project Overview
+## Demo Features
 
-### Project Title
-
-**Mini Milestone Journey Management System**
-
-### Description
-
-This project is a **full-stack web application** that allows users to manage a *journey* consisting of **stages** and **steps (tasks)**.
-Each step has a status, and **completion percentages are calculated dynamically** at the stage and journey levels.
-
-The system supports:
-
-* Viewing journey progress
-* Adding / deleting stages
-* Adding / deleting steps
-* Updating step status
-* Automatic progress calculation
-* Loading indicators during API delays
+✅ Load journey from API: `GET /api/journeys/123`  
+✅ Select stages from sidebar  
+✅ Add/Delete Stage  
+✅ Add/Delete Step  
+✅ Update Step Status (NOT_STARTED / IN_PROGRESS / COMPLETED)  
+✅ Auto progress calculation (stage + journey)  
+✅ Loading spinners (page load + actions)  
+✅ Edge cases handled (empty steps → “No tasks yet”)
 
 ---
 
-## 2. Tech Stack
+## Tech Stack
 
-### Frontend
+**Frontend**
+- React (Vite)
+- JavaScript
+- CSS
 
-* **React (Vite)**
-* JavaScript (ES6+)
-* CSS (Flexbox, responsive layout)
-
-### Backend
-
-* **Python – FastAPI**
-* In-memory data store (can be replaced with DB)
-
-### Communication
-
-* REST APIs
-* JSON over HTTP
-* Vite proxy for local development
+**Backend**
+- Python
+- FastAPI
+- Uvicorn
 
 ---
 
-## 3. High-Level Architecture
+## Project Structure
 
 ```
-Browser (React UI)
-        |
-        |  HTTP (JSON)
-        v
-Vite Dev Server (Proxy)
-        |
-        v
-FastAPI Backend
-        |
-        v
-In-Memory Data Store
-```
 
-### Responsibilities
+milestone-journey/
+backend/
+main.py
+.venv/               (created locally)
+frontend/
+package.json
+vite.config.js
+src/
+App.jsx
+App.css
+components/
+StatusTag.jsx
+UpdateStatusModal.jsx
+AddStageModal.jsx
+AddStepModal.jsx
 
-| Layer      | Responsibility                           |
-| ---------- | ---------------------------------------- |
-| React UI   | Rendering, user interaction, API calls   |
-| Vite       | Dev server, proxy `/api` → backend       |
-| FastAPI    | Business logic, validation, calculations |
-| Data Store | Journey, stages, steps                   |
+````
 
 ---
 
-## 4. Data Model
+## Prerequisites
 
-### Journey
+### 1) Install Node.js (LTS)
+- Install **Node.js LTS** (recommended)
+- Verify:
+```powershell
+node -v
+npm -v
+````
 
-```json
-{
-  "journey_id": "123",
-  "name": "ISO27001 Readiness",
-  "completion_pct": 40,
-  "stages": []
-}
-```
+### 2) Install Python (3.10+ recommended)
 
-### Stage
+Verify:
 
-```json
-{
-  "stage_id": "s1",
-  "name": "Onboarding",
-  "completion_pct": 60,
-  "steps": []
-}
-```
-
-### Step
-
-```json
-{
-  "step_id": "t1",
-  "name": "Connect AWS",
-  "status": "IN_PROGRESS"
-}
+```powershell
+python --version
 ```
 
 ---
 
-## 5. Completion Percentage Logic
+## Setup & Run (Windows / PowerShell)
 
-### Status Weights
-
-| Status      | Weight |
-| ----------- | ------ |
-| NOT_STARTED | 0.0    |
-| IN_PROGRESS | 0.5    |
-| COMPLETED   | 1.0    |
-
-### Stage Completion
-
-```
-stage_completion = (sum(step_weights) / number_of_steps) × 100
-```
-
-### Journey Completion
-
-```
-journey_completion = (sum(all_step_weights) / total_steps) × 100
-```
-
-> If a stage has **0 steps**, its completion is **0%**.
+> You need TWO terminals: one for backend, one for frontend.
 
 ---
 
-## 6. Backend API Documentation
+## 1) Backend Setup (FastAPI)
+
+### Open PowerShell and go to backend folder
+
+```powershell
+cd C:\path\to\milestone-journey\backend
+```
+
+### Create & activate virtual environment
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+### Install dependencies
+
+```powershell
+pip install fastapi uvicorn "fastapi[all]"
+```
+
+### Run backend (IMPORTANT: IPv4 host)
+
+```powershell
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Test backend in browser
+
+Open:
+
+* [http://127.0.0.1:8000/api/journeys/123](http://127.0.0.1:8000/api/journeys/123)
+
+You should see JSON.
+
+---
+
+## 2) Frontend Setup (React)
+
+### Open a second PowerShell window and go to frontend folder
+
+```powershell
+cd C:\path\to\milestone-journey\frontend
+```
+
+### Install dependencies
+
+```powershell
+npm install
+```
+
+### Start frontend
+
+```powershell
+npm run dev
+```
+
+Open the local URL shown (usually):
+
+* [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 3) Vite Proxy Setup (Frontend → Backend)
+
+To call backend APIs using relative URLs like `/api/journeys/123`,
+Vite proxy forwards `/api/*` → `http://127.0.0.1:8000`.
+
+### `frontend/vite.config.js`
+
+```js
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+      },
+    },
+  },
+});
+```
+
+After changing this file, restart Vite:
+
+* Stop: `Ctrl + C`
+* Run again: `npm run dev`
+
+### Proxy test (important)
+
+Open in browser:
+
+* [http://localhost:5173/api/journeys/123](http://localhost:5173/api/journeys/123)
+
+If you see JSON, frontend is connected.
+
+---
+
+## API Documentation
 
 ### Get Journey
 
@@ -165,23 +205,12 @@ journey_completion = (sum(all_step_weights) / total_steps) × 100
 GET /api/journeys/{journey_id}
 ```
 
-**Response:** Journey object with computed completion.
-
----
-
 ### Add Stage
 
 ```
 POST /api/journeys/{journey_id}/stages
+Body: { "name": "Stage Name" }
 ```
-
-```json
-{
-  "name": "Risk Assessment"
-}
-```
-
----
 
 ### Delete Stage
 
@@ -189,36 +218,19 @@ POST /api/journeys/{journey_id}/stages
 DELETE /api/stages/{stage_id}
 ```
 
----
-
 ### Add Step
 
 ```
 POST /api/stages/{stage_id}/steps
+Body: { "name": "Step Name", "status": "NOT_STARTED" }
 ```
-
-```json
-{
-  "name": "Configure IAM",
-  "status": "NOT_STARTED"
-}
-```
-
----
 
 ### Update Step Status
 
 ```
 PATCH /api/steps/{step_id}
+Body: { "status": "COMPLETED" }
 ```
-
-```json
-{
-  "status": "COMPLETED"
-}
-```
-
----
 
 ### Delete Step
 
@@ -228,203 +240,108 @@ DELETE /api/steps/{step_id}
 
 ---
 
-## 7. Frontend Component Structure
+## Completion Percentage Logic
+
+Statuses have weights:
+
+* NOT_STARTED → 0.0
+* IN_PROGRESS → 0.5
+* COMPLETED → 1.0
+
+Stage completion:
 
 ```
-src/
-│── App.jsx                 (Main container & state manager)
-│── App.css                 (Global styles)
-│
-└── components/
-    ├── StatusTag.jsx       (Status badge)
-    ├── UpdateStatusModal.jsx
-    ├── AddStageModal.jsx
-    └── AddStepModal.jsx
+(sum(step_weights) / total_steps) * 100
 ```
 
-### Component Responsibilities
+Journey completion is calculated across all steps in all stages.
 
-| Component         | Responsibility                  |
-| ----------------- | ------------------------------- |
-| App.jsx           | State, API calls, orchestration |
-| StatusTag         | Visual status indicator         |
-| UpdateStatusModal | Change step status              |
-| AddStageModal     | Create new stage                |
-| AddStepModal      | Create new step                 |
+If a stage has 0 steps → 0%.
 
 ---
 
-## 8. State Management (Frontend)
+## UI Notes
 
-### Main States in `App.jsx`
+### Loading Animations
 
-```js
-journey            // complete journey data
-selectedStageId   // active stage
-loading            // initial fetch loading
-actionLoading      // API action loading overlay
-modalOpen          // update status modal
-addStageOpen       // add stage modal
-addStepOpen        // add step modal
-```
+* Page loading spinner: shown while the journey is being fetched
+* Action loading overlay: shown while add/delete/update API calls run
+
+### Edge Cases
+
+* API failure → visible error message + Retry button
+* Stage with zero steps → “No tasks yet”
 
 ---
 
-## 9. Loading & UX Handling
+## Common Issues & Fixes
 
-### Types of Loading
+### 1) ECONNREFUSED ::1:8000 (IPv6 localhost issue)
 
-1. **Page Loading**
-
-   * Initial journey fetch
-   * Shows spinner inside content card
-
-2. **Action Loading**
-
-   * Add / delete / update actions
-   * Full-screen overlay with spinner
-   * Disables buttons to prevent double clicks
-
----
-
-## 10. UML Diagrams
-
----
-
-### 10.1 Use Case Diagram (Text UML)
+If you see:
 
 ```
-User
- ├─ View Journey
- ├─ Select Stage
- ├─ Add Stage
- ├─ Delete Stage
- ├─ Add Step
- ├─ Delete Step
- └─ Update Step Status
+Error: connect ECONNREFUSED ::1:8000
+```
+
+Fix:
+
+* Run backend with IPv4 host:
+
+```powershell
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+* Ensure Vite proxy target uses `127.0.0.1` not `localhost`.
+
+---
+
+### 2) npm ENOENT package.json not found
+
+It means you ran `npm install` in the wrong folder.
+
+Fix:
+
+* Make sure you're inside `frontend/` where `package.json` exists:
+
+```powershell
+cd milestone-journey\frontend
+dir
 ```
 
 ---
 
-### 10.2 Class Diagram (Logical)
+### 3) Backend works but frontend API fails
+
+Test:
+
+* Backend direct:
+
+  * [http://127.0.0.1:8000/api/journeys/123](http://127.0.0.1:8000/api/journeys/123)
+* Proxy route:
+
+  * [http://localhost:5173/api/journeys/123](http://localhost:5173/api/journeys/123)
+
+If proxy route fails, check:
+
+* `vite.config.js` is correct
+* Vite was restarted after editing config
+
+---
+
+## Future Enhancements
+
+* Persist data using SQLite/PostgreSQL
+* Authentication (multi-user journeys)
+* Drag-and-drop ordering of stages/steps
+* Audit logs for changes
+* Export report (PDF/CSV)
+
+---
+
+## License
+
+MIT
 
 ```
-+----------------+
-| Journey        |
-+----------------+
-| journey_id     |
-| name           |
-| completion_pct |
-+----------------+
-| recompute()    |
-+----------------+
-        |
-        | 1..*
-        v
-+----------------+
-| Stage          |
-+----------------+
-| stage_id       |
-| name           |
-| completion_pct |
-+----------------+
-        |
-        | 1..*
-        v
-+----------------+
-| Step           |
-+----------------+
-| step_id        |
-| name           |
-| status         |
-+----------------+
-```
-
----
-
-### 10.3 Sequence Diagram (Update Step Status)
-
-```mermaid
-sequenceDiagram
-User ->> React UI: Click "Update Status"
-React UI ->> FastAPI: PATCH /api/steps/{id}
-FastAPI ->> Data Store: Update step status
-FastAPI ->> FastAPI: Recompute completion
-FastAPI -->> React UI: Success response
-React UI ->> FastAPI: GET /api/journeys/{id}
-FastAPI -->> React UI: Updated journey JSON
-```
-
----
-
-### 10.4 Component Interaction Diagram
-
-```mermaid
-graph TD
-App --> StatusTag
-App --> UpdateStatusModal
-App --> AddStageModal
-App --> AddStepModal
-App --> FastAPI
-FastAPI --> JourneyStore
-```
-
----
-
-## 11. Error Handling
-
-### Backend
-
-* `404` → Resource not found
-* `400` → Invalid input
-* Defensive checks for missing lists
-
-### Frontend
-
-* Error messages on API failure
-* Disabled UI during loading
-* Safe state resets after deletes
-
----
-
-## 12. Limitations
-
-* In-memory data (resets on server restart)
-* Single-user system
-* No authentication
-
----
-
-## 13. Future Enhancements
-
-* Database (PostgreSQL / SQLite)
-* Authentication & roles
-* Drag-and-drop reordering
-* Audit logs
-* Real-time updates (WebSockets)
-* Export progress reports
-
----
-
-## 14. Conclusion
-
-This project demonstrates:
-
-* Clean **full-stack architecture**
-* Proper **state management**
-* RESTful API design
-* Dynamic progress computation
-* Scalable backend logic
-
-It is suitable as a **portfolio project**, **capstone**, or **internship demonstration**.
-
----
-
-If you want, I can:
-
-* Convert this into a **PDF / DOC format**
-* Generate **draw.io / PNG UML diagrams**
-* Write a **GitHub README**
-* Add a **database-backed version**
-
-Just tell me what you need next 👍
+\
