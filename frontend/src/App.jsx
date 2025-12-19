@@ -31,23 +31,6 @@ export default function App() {
   const [actionLoading, setActionLoading] = useState(false);
 
 
-  // Add a new stage to the current journey.
-// Validates input, sends POST to the API, and refreshes the journey on success.
-// async function addStage(stageName) {
-//   const name = (stageName || "").trim();
-//   if (!name) return alert("Stage name required");
-
-//   const res = await fetch(`/api/journeys/${JOURNEY_ID}/stages`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ name }),
-//   });
-
-//   if (!res.ok) return alert(`Add stage failed (${res.status})`);
-//   setAddStageOpen(false);
-//   await fetchJourney();
-// } 
-
 // Delete a stage (and its steps) after user confirmation,
 // then refresh the journey and clear selection if necessary.
 async function deleteStage(stageId) {
@@ -66,35 +49,6 @@ async function deleteStage(stageId) {
     setActionLoading(false);
   }
 }
-
-
-// Add a step to the currently selected stage.
-// Sends POST with name and initial status, then refreshes.
-// async function addStep(stepName, status) {
-//   const name = (stepName || "").trim();
-//   if (!name) return alert("Step name required");
-//   if (!selectedStageId) return;
-
-//   const res = await fetch(`/api/stages/${selectedStageId}/steps`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ name, status }),
-//   });
-
-//   if (!res.ok) return alert(`Add step failed (${res.status})`);
-//   setAddStepOpen(false);
-//   await fetchJourney();
-// } 
-
-// Delete a single step after confirmation and refresh the journey.
-// async function deleteStep(stepId) {
-//   if (!confirm("Delete this step?")) return;
-
-//   const res = await fetch(`/api/steps/${stepId}`, { method: "DELETE" });
-//   if (!res.ok) return alert(`Delete step failed (${res.status})`);
-
-//   await fetchJourney();
-// } 
 
   
   // Fetch the full journey from the API, set loading/error states,
