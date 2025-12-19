@@ -274,74 +274,8 @@ If a stage has 0 steps → 0%.
 
 ---
 
-## Common Issues & Fixes
-
-### 1) ECONNREFUSED ::1:8000 (IPv6 localhost issue)
-
-If you see:
-
-```
-Error: connect ECONNREFUSED ::1:8000
-```
-
-Fix:
-
-* Run backend with IPv4 host:
-
-```powershell
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
-```
-
-* Ensure Vite proxy target uses `127.0.0.1` not `localhost`.
-
----
-
-### 2) npm ENOENT package.json not found
-
-It means you ran `npm install` in the wrong folder.
-
-Fix:
-
-* Make sure you're inside `frontend/` where `package.json` exists:
-
-```powershell
-cd milestone-journey\frontend
-dir
-```
-
----
-
-### 3) Backend works but frontend API fails
-
-Test:
-
-* Backend direct:
-
-  * [http://127.0.0.1:8000/api/journeys/123](http://127.0.0.1:8000/api/journeys/123)
-* Proxy route:
-
-  * [http://localhost:5173/api/journeys/123](http://localhost:5173/api/journeys/123)
-
-If proxy route fails, check:
-
-* `vite.config.js` is correct
-* Vite was restarted after editing config
-
----
-
-## Future Enhancements
-
-* Persist data using SQLite/PostgreSQL
-* Authentication (multi-user journeys)
-* Drag-and-drop ordering of stages/steps
-* Audit logs for changes
-* Export report (PDF/CSV)
-
----
-
 ## License
 
 MIT
 
 ```
-\
